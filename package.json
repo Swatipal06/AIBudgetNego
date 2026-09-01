@@ -1,0 +1,21 @@
+{
+  "name": "negotiating-budget-agents",
+  "version": "1.0.0",
+  "description": "Enterprise AI Multi-Agent Budget Negotiation Platform with Deterministic Validation and Human Governance",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "cd server && npm run dev",
+    "dev:client": "cd client && npm run dev",
+    "install:all": "npm install && cd server && npm install && cd ../client && npm install",
+    "build": "cd client && npm run build",
+    "test": "cd server && npm test",
+    "seed": "cd server && npm run seed",
+    "lint": "cd server && npm run lint && cd ../client && npm run lint"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "author": "Enterprise AI Systems",
+  "license": "MIT"
+}
