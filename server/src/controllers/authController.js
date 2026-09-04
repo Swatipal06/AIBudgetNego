@@ -25,14 +25,12 @@ export const register = async (req, res, next) => {
       });
     }
 
-    // Only allow ADMIN or VIEWER
-    const userRole = role === 'ADMIN' ? 'ADMIN' : 'VIEWER';
-
+    // Public self-registration always creates users with VIEWER role, ignoring any role in req.body
     const user = await User.create({
       name,
       email,
       password,
-      role: userRole,
+      role: 'VIEWER',
     });
 
     const token = user.generateAuthToken();
@@ -121,3 +119,51 @@ export const getMe = async (req, res, next) => {
     next(error);
   }
 };
+
+/**
+ * @desc    Update user role (e.g. promote to ADMIN)
+ * @route   POST /api/auth/users/:id/role
+ * @access  Private/Admin
+ */
+export const updateUserRole = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { role = 'ADMIN' } = req.body;
+
+    if (!['ADMIN', 'VIEWER'].includes(role)) {
+      return res.status(400).json({
+        success: false,
+        message: `Invalid role: ${role}. Allowed roles: ADMIN, VIEWER`,
+      });
+    }
+
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: `User with id ${id} not found`,
+      });
+    }
+
+    user.role = role;
+    await user.save();
+
+    logger.info(
+      `User role updated: ${user.email} role changed to ${user.role} by admin ${req.user ? req.user.email : 'system'}`
+    );
+
+    res.status(200).json({
+      success: true,
+      message: `User role updated successfully to ${user.role}`,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+

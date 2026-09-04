@@ -58,7 +58,10 @@ userSchema.methods.matchPassword = async function (enteredPassword) {
 
 // Sign JWT Token
 userSchema.methods.generateAuthToken = function () {
-  const secret = process.env.JWT_SECRET || 'fallback_jwt_secret_negotiating_budget_2026';
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    throw new Error('JWT_SECRET environment variable is not set. Cannot sign token.');
+  }
   const expiresIn = process.env.JWT_EXPIRES_IN || '7d';
   return jwt.sign(
     {

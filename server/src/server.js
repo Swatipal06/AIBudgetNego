@@ -11,6 +11,12 @@ const PORT = process.env.PORT || 8000;
 
 const startServer = async () => {
   try {
+    // 0. Fail fast if critical environment variables are missing
+    if (!process.env.JWT_SECRET) {
+      logger.error('FATAL: JWT_SECRET environment variable is not set. Server cannot start securely.');
+      process.exit(1);
+    }
+
     // 1. Connect MongoDB
     await connectDB();
 

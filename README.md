@@ -2,7 +2,7 @@
 
 > **Enterprise Autonomous Multi-Agent AI Budget Allocation Platform with Deterministic Backend Validation and Human-in-the-Loop Governance.**
 
-[![CI Pipeline](https://github.com/enterprise/negotiating-budget-agents/actions/workflows/ci.yml/badge.svg)](https://github.com/enterprise/negotiating-budget-agents/actions)
+[![CI Pipeline](https://github.com/Swatipal06/AIBudgetNego/actions/workflows/ci.yml/badge.svg)](https://github.com/Swatipal06/AIBudgetNego/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-teal.svg)](https://opensource.org/licenses/MIT)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D20.0.0-indigo.svg)](https://nodejs.org)
 [![Docker](https://img.shields.io/badge/Docker-Supported-blue.svg)](https://www.docker.com/)
@@ -178,8 +178,8 @@ Every state mutation in the lifecycle is logged in the `NegotiationEvent` model 
 
 ### 1. Clone & Configure
 ```bash
-git clone https://github.com/enterprise/negotiating-budget-agents.git
-cd negotiating-budget-agents
+git clone https://github.com/Swatipal06/AIBudgetNego.git
+cd AIBudgetNego
 cp .env.example .env
 ```
 

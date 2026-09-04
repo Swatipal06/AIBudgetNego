@@ -20,7 +20,14 @@ export const protect = async (req, res, next) => {
   }
 
   try {
-    const secret = process.env.JWT_SECRET || 'fallback_jwt_secret_negotiating_budget_2026';
+    const secret = process.env.JWT_SECRET;
+    if (!secret) {
+      logger.error('JWT_SECRET environment variable is not set. Cannot verify token.');
+      return res.status(500).json({
+        success: false,
+        message: 'Server misconfiguration: authentication service unavailable.',
+      });
+    }
     const decoded = jwt.verify(token, secret);
 
     const user = await User.findById(decoded.id).select('-password');
