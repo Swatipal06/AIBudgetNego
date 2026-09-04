@@ -36,7 +36,7 @@ services:
       - PORT=8000
       - MONGODB_URI=mongodb://mongodb:27017/budget_agents
       - REDIS_URL=redis://redis:6379
-      - JWT_SECRET=enterprise_production_jwt_secret_key_2026
+      - JWT_SECRET=${JWT_SECRET}
       - CLIENT_URL=http://localhost:5173
       - LLM_PROVIDER=groq
       - GROQ_API_KEY=${GROQ_API_KEY}

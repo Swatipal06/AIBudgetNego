@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import { requireRole } from '../src/middleware/roleMiddleware.js';
 import { protect } from '../src/middleware/authMiddleware.js';
 import { register, updateUserRole } from '../src/controllers/authController.js';
+import { authRateLimiter } from '../src/middleware/rateLimiter.js';
 import User from '../src/models/User.js';
 
 describe('Authentication & Role-Based Authorization (RBAC)', () => {
@@ -245,5 +246,59 @@ describe('Authentication & Role-Based Authorization (RBAC)', () => {
     expect(statusCode).toBe(403);
     expect(jsonResponse.success).toBe(false);
     expect(jsonResponse.message).toContain('Forbidden');
+  });
+
+  test('29. authRateLimiter rejects requests exceeding threshold with HTTP 429', async () => {
+    const createMockReqRes = (ip = '192.168.1.100') => {
+      let statusCode = 200;
+      let jsonResponse = null;
+      let nextCalled = false;
+      const headers = {};
+
+      const req = {
+        ip,
+        headers: {},
+        app: {
+          get: () => false,
+        },
+      };
+      const res = {
+        setHeader: (key, val) => {
+          headers[key] = val;
+        },
+        getHeader: (key) => headers[key],
+        status: (code) => {
+          statusCode = code;
+          return {
+            json: (data) => {
+              jsonResponse = data;
+            },
+          };
+        },
+      };
+      const next = () => {
+        nextCalled = true;
+      };
+
+      return { req, res, next, getStatus: () => statusCode, getJson: () => jsonResponse, wasNextCalled: () => nextCalled };
+    };
+
+    // The default limit is 10 requests. Call 10 times to consume limit.
+    for (let i = 0; i < 10; i++) {
+      const mock = createMockReqRes('10.0.0.99');
+      await authRateLimiter(mock.req, mock.res, mock.next);
+      expect(mock.wasNextCalled()).toBe(true);
+    }
+
+    // 11th request should be blocked with 429
+    const blockedMock = createMockReqRes('10.0.0.99');
+    await authRateLimiter(blockedMock.req, blockedMock.res, blockedMock.next);
+
+    expect(blockedMock.wasNextCalled()).toBe(false);
+    expect(blockedMock.getStatus()).toBe(429);
+    expect(blockedMock.getJson()).toEqual({
+      success: false,
+      message: 'Too many attempts, please try again later.',
+    });
   });
 });
