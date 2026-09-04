@@ -1,18 +1,15 @@
 import React, { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 import {
-  Scale,
   Plus,
   Trash2,
   AlertTriangle,
   CheckCircle2,
-  Lock,
-  Sparkles,
-  ArrowRight,
+  ChevronLeft,
   Shield,
-  Layers,
+  ArrowRight,
 } from 'lucide-react';
 
 const DEFAULT_COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ec4899', '#8b5cf6', '#06b6d4'];
@@ -21,8 +18,8 @@ export const CreateNegotiationPage = () => {
   const { isAdmin } = useAuth();
   const navigate = useNavigate();
 
-  const [title, setTitle] = useState('FY2026 Department Operating Budget Negotiation');
-  const [description, setDescription] = useState('Multi-agent budget negotiation balancing technical scalability, global growth, and sales acquisition.');
+  const [title, setTitle] = useState('FY2026 Department Operating Budget Allocation');
+  const [description, setDescription] = useState('Multi-department budget negotiation balancing platform engineering, global marketing, and sales expansion.');
   const [companyBudget, setCompanyBudget] = useState(1000000);
   const [maxRounds, setMaxRounds] = useState(5);
   const [departments, setDepartments] = useState([
@@ -35,7 +32,7 @@ export const CreateNegotiationPage = () => {
       hardConstraints: 'Mandatory Cloud Infrastructure (₹3L), SOC-2 Security Compliance (₹1L)',
       softPreferences: 'Experimental LLM Cluster (₹60k), Additional CI/CD Runners (₹40k)',
       color: '#3b82f6',
-      description: 'Core platform engineering, site reliability, and cloud architecture.',
+      description: 'Platform infrastructure, cloud reliability, and security services.',
     },
     {
       name: 'Marketing',
@@ -46,7 +43,7 @@ export const CreateNegotiationPage = () => {
       hardConstraints: 'Global Q3 Product Launch (₹1.8L), Analytics Stack (₹70k)',
       softPreferences: 'Keynote Tech Sponsorships (₹90k), Influencer Campaign (₹60k)',
       color: '#10b981',
-      description: 'Global brand reach, customer acquisition, and performance campaigns.',
+      description: 'Brand campaigns, user acquisition, and public events.',
     },
     {
       name: 'Sales',
@@ -57,13 +54,13 @@ export const CreateNegotiationPage = () => {
       hardConstraints: 'CRM Licenses & Quota Commission Pool (₹1.5L), Retention (₹50k)',
       softPreferences: 'International Roadshow (₹60k), Client Hospitality (₹40k)',
       color: '#f59e0b',
-      description: 'Revenue generation, enterprise deals, and customer onboarding.',
+      description: 'Enterprise pipeline, customer expansion, and retention.',
     },
   ]);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
 
-  // Live Deterministic Feasibility Calculation
+  // Feasibility Calculation
   const feasibility = useMemo(() => {
     const totalMin = departments.reduce((sum, d) => sum + (Number(d.minAcceptableBudget) || 0), 0);
     const totalReq = departments.reduce((sum, d) => sum + (Number(d.requestedBudget) || 0), 0);
@@ -116,7 +113,7 @@ export const CreateNegotiationPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!feasibility.isFeasible) {
-      setError(`Cannot create negotiation: Combined minimum acceptable requirements (₹${feasibility.totalMin.toLocaleString('en-IN')}) exceed total company budget (₹${feasibility.budgetNum.toLocaleString('en-IN')}).`);
+      setError(`Cannot create negotiation: Combined minimum requirements (₹${feasibility.totalMin.toLocaleString('en-IN')}) exceed company budget limit (₹${feasibility.budgetNum.toLocaleString('en-IN')}).`);
       return;
     }
 
@@ -124,7 +121,6 @@ export const CreateNegotiationPage = () => {
       setSubmitting(true);
       setError(null);
 
-      // Parse string constraints to array
       const payloadDepartments = departments.map((d) => ({
         ...d,
         requestedBudget: Number(d.requestedBudget),
@@ -160,11 +156,11 @@ export const CreateNegotiationPage = () => {
   if (!isAdmin) {
     return (
       <div className="max-w-xl mx-auto py-16 px-4 text-center">
-        <div className="glass-panel p-8 rounded-3xl border-slate-800">
-          <Shield className="w-12 h-12 text-amber-400 mx-auto mb-3" />
-          <h2 className="text-xl font-bold text-slate-100">Administrator Access Required</h2>
-          <p className="text-xs text-slate-400 mt-2">
-            Only authenticated users with the ADMIN role can configure and initialize new budget negotiations.
+        <div className="bg-[#111827] border border-[#1f293d] p-8 rounded-lg">
+          <Shield className="w-10 h-10 text-amber-400 mx-auto mb-3" />
+          <h2 className="text-base font-semibold text-slate-100">Administrator Access Required</h2>
+          <p className="text-xs text-slate-400 mt-1">
+            Only users with the Administrator role can configure new budget negotiations.
           </p>
         </div>
       </div>
@@ -172,83 +168,76 @@ export const CreateNegotiationPage = () => {
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-      {/* Header */}
-      <div className="glass-panel p-6 sm:p-8 rounded-3xl border-slate-800 relative overflow-hidden">
-        <div className="space-y-1">
-          <div className="flex items-center space-x-2 text-xs font-semibold text-brand-400 uppercase tracking-widest">
-            <Layers className="w-3.5 h-3.5" />
-            <span>Negotiation Orchestrator Configuration</span>
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight font-heading">
-            Create Multi-Agent Budget Negotiation
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+      {/* Back Link & Header */}
+      <div className="space-y-3">
+        <Link
+          to="/"
+          className="inline-flex items-center space-x-1 text-xs text-slate-400 hover:text-slate-200 transition-colors"
+        >
+          <ChevronLeft className="w-3.5 h-3.5" />
+          <span>Back to Negotiations</span>
+        </Link>
+
+        <div className="pb-3 border-b border-[#1f293d]">
+          <h1 className="text-xl font-semibold text-white tracking-tight">
+            New Negotiation
           </h1>
-          <p className="text-xs sm:text-sm text-slate-400 max-w-2xl">
-            Configure dynamic department agents, hard minimum floors, strategic priorities, and total company budget ceilings.
+          <p className="text-xs text-slate-400 mt-1">
+            Configure company budget limit, rounds, and department agent constraints.
           </p>
         </div>
       </div>
 
       {error && (
-        <div className="bg-red-950/80 border border-red-800 text-red-300 text-xs rounded-2xl p-4 flex items-start gap-3">
-          <AlertTriangle className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
+        <div className="bg-red-950/40 border border-red-800/60 text-red-300 text-xs rounded-md p-3.5 flex items-start gap-2.5">
+          <AlertTriangle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
           <div>
-            <strong className="block font-bold">Configuration Validation Error</strong>
+            <strong className="font-semibold block">Validation Error</strong>
             {error}
           </div>
         </div>
       )}
 
-      {/* Live Feasibility Widget */}
+      {/* Feasibility Summary Banner */}
       <div
-        className={`glass-panel p-5 rounded-2xl border transition-all ${
+        className={`p-4 rounded-lg border text-xs ${
           feasibility.isFeasible
-            ? 'border-emerald-700/60 bg-emerald-950/20'
-            : 'border-red-700/60 bg-red-950/30'
+            ? 'bg-[#0c1813] border-emerald-900/60'
+            : 'bg-[#181112] border-red-900/60'
         }`}
       >
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="flex items-start space-x-3">
-            <div
-              className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
-                feasibility.isFeasible ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-start space-x-2.5">
+            <span
+              className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${
+                feasibility.isFeasible ? 'bg-emerald-400' : 'bg-red-400'
               }`}
-            >
-              {feasibility.isFeasible ? (
-                <CheckCircle2 className="w-5 h-5" />
-              ) : (
-                <AlertTriangle className="w-5 h-5 animate-pulse" />
-              )}
-            </div>
+            />
             <div>
-              <div className="flex items-center space-x-2">
-                <span
-                  className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded border ${
-                    feasibility.isFeasible
-                      ? 'bg-emerald-950 text-emerald-300 border-emerald-800'
-                      : 'bg-red-950 text-red-300 border-red-800'
-                  }`}
-                >
-                  {feasibility.isFeasible ? 'Feasible Configuration' : 'Mathematically Infeasible'}
-                </span>
-                <span className="text-[11px] text-slate-400">Deterministic Feasibility Gate</span>
-              </div>
-              <p className="text-xs text-slate-300 mt-1">
+              <span
+                className={`font-semibold ${
+                  feasibility.isFeasible ? 'text-emerald-300' : 'text-red-300'
+                }`}
+              >
+                {feasibility.isFeasible ? 'Feasible Configuration' : 'Mathematically Infeasible'}
+              </span>
+              <p className="text-slate-400 mt-0.5">
                 {feasibility.isFeasible
-                  ? `Total Minimum Floor: ${formatCurrency(feasibility.totalMin)} is within Company Budget ${formatCurrency(feasibility.budgetNum)}. Multi-agent negotiation can safely proceed.`
-                  : `Combined minimum acceptable requirements (${formatCurrency(feasibility.totalMin)}) exceed company budget by ${formatCurrency(feasibility.deficit)}. Negotiation cannot proceed.`}
+                  ? `Total minimum requirements (${formatCurrency(feasibility.totalMin)}) are within the company budget (${formatCurrency(feasibility.budgetNum)}).`
+                  : `Combined minimum requirements (${formatCurrency(feasibility.totalMin)}) exceed the budget limit by ${formatCurrency(feasibility.deficit)}.`}
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-4 text-xs font-mono shrink-0">
-            <div className="text-right">
+          <div className="flex items-center gap-4 text-xs font-mono shrink-0 text-slate-300">
+            <div>
               <span className="text-slate-400 text-[10px] uppercase block">Total Demand</span>
-              <span className="font-bold text-slate-200">{formatCurrency(feasibility.totalReq)}</span>
+              <span>{formatCurrency(feasibility.totalReq)}</span>
             </div>
-            <div className="text-right border-l border-slate-800 pl-4">
-              <span className="text-slate-400 text-[10px] uppercase block">Minimum Floor</span>
-              <span className={`font-bold ${feasibility.isFeasible ? 'text-emerald-300' : 'text-red-400'}`}>
+            <div className="border-l border-[#1f293d] pl-4">
+              <span className="text-slate-400 text-[10px] uppercase block">Min Floor</span>
+              <span className={feasibility.isFeasible ? 'text-emerald-300' : 'text-red-400'}>
                 {formatCurrency(feasibility.totalMin)}
               </span>
             </div>
@@ -256,17 +245,16 @@ export const CreateNegotiationPage = () => {
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-8">
+      <form onSubmit={handleSubmit} className="space-y-6">
         {/* Global Settings */}
-        <div className="glass-panel p-6 rounded-3xl border-slate-800 space-y-4">
-          <h2 className="text-base font-bold text-slate-100 flex items-center gap-2">
-            <Scale className="w-4 h-4 text-brand-400" />
-            <span>Corporate Budget Parameters</span>
+        <div className="bg-[#111827] border border-[#1f293d] rounded-lg p-5 space-y-4">
+          <h2 className="text-sm font-semibold text-white">
+            Budget Parameters
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <div className="sm:col-span-2">
-              <label className="block text-xs font-semibold text-slate-300 mb-1">
+              <label className="block text-xs font-medium text-slate-300 mb-1">
                 Negotiation Title
               </label>
               <input
@@ -274,13 +262,13 @@ export const CreateNegotiationPage = () => {
                 required
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-100 focus:border-brand-500 focus:outline-none"
+                className="w-full bg-[#0b0f17] border border-[#1f293d] rounded-md px-3 py-2 text-xs text-slate-100 focus:border-blue-500 focus:outline-none"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">
-                Total Company Budget (₹)
+              <label className="block text-xs font-medium text-slate-300 mb-1">
+                Company Budget (₹)
               </label>
               <input
                 type="number"
@@ -288,24 +276,24 @@ export const CreateNegotiationPage = () => {
                 min={1}
                 value={companyBudget}
                 onChange={(e) => setCompanyBudget(Number(e.target.value))}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-100 font-mono font-bold focus:border-brand-500 focus:outline-none"
+                className="w-full bg-[#0b0f17] border border-[#1f293d] rounded-md px-3 py-2 text-xs text-slate-100 font-mono font-medium focus:border-blue-500 focus:outline-none"
               />
             </div>
 
             <div className="sm:col-span-2">
-              <label className="block text-xs font-semibold text-slate-300 mb-1">
-                Corporate Strategic Description
+              <label className="block text-xs font-medium text-slate-300 mb-1">
+                Description / Memo
               </label>
               <input
                 type="text"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-100 focus:border-brand-500 focus:outline-none"
+                className="w-full bg-[#0b0f17] border border-[#1f293d] rounded-md px-3 py-2 text-xs text-slate-100 focus:border-blue-500 focus:outline-none"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">
+              <label className="block text-xs font-medium text-slate-300 mb-1">
                 Max Negotiation Rounds
               </label>
               <input
@@ -315,47 +303,47 @@ export const CreateNegotiationPage = () => {
                 max={20}
                 value={maxRounds}
                 onChange={(e) => setMaxRounds(Number(e.target.value))}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-100 font-mono focus:border-brand-500 focus:outline-none"
+                className="w-full bg-[#0b0f17] border border-[#1f293d] rounded-md px-3 py-2 text-xs text-slate-100 font-mono focus:border-blue-500 focus:outline-none"
               />
             </div>
           </div>
         </div>
 
         {/* Dynamic Departments Configuration */}
-        <div className="space-y-4">
+        <div className="space-y-3">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-base font-bold text-slate-100">
+              <h2 className="text-sm font-semibold text-white">
                 Department Agent Configurations ({departments.length})
               </h2>
               <p className="text-xs text-slate-400">
-                Each agent has its own priorities, hard constraints, and negotiation persona.
+                Define the requested allocation, minimum acceptable floor, and negotiation strategy for each department.
               </p>
             </div>
             <button
               type="button"
               onClick={handleAddDepartment}
-              className="flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold transition-colors border border-slate-700"
+              className="inline-flex items-center space-x-1 px-3 py-1.5 rounded-md bg-[#141c2c] hover:bg-[#1a2436] text-slate-200 text-xs font-medium transition-colors border border-[#243048]"
             >
-              <Plus className="w-4 h-4 text-brand-400" />
+              <Plus className="w-3.5 h-3.5" />
               <span>Add Department</span>
             </button>
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-3">
             {departments.map((dept, index) => (
               <div
                 key={index}
-                className="glass-panel p-5 rounded-2xl border-slate-800 relative space-y-4"
-                style={{ borderLeft: `4px solid ${dept.color}` }}
+                className="bg-[#111827] border border-[#1f293d] rounded-lg p-4 space-y-3"
+                style={{ borderLeft: `3px solid ${dept.color}` }}
               >
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
+                  <div className="flex items-center space-x-2.5">
                     <input
                       type="color"
                       value={dept.color}
                       onChange={(e) => handleDeptChange(index, 'color', e.target.value)}
-                      className="w-7 h-7 rounded-lg border-0 cursor-pointer bg-transparent"
+                      className="w-6 h-6 rounded border-0 cursor-pointer bg-transparent"
                       title="Department Color"
                     />
                     <input
@@ -364,7 +352,7 @@ export const CreateNegotiationPage = () => {
                       placeholder="Department Name"
                       value={dept.name}
                       onChange={(e) => handleDeptChange(index, 'name', e.target.value)}
-                      className="text-base font-bold text-white bg-slate-950/80 border border-slate-800 rounded-lg px-3 py-1.5 focus:outline-none focus:border-brand-500"
+                      className="text-sm font-semibold text-white bg-[#0b0f17] border border-[#1f293d] rounded-md px-2.5 py-1 focus:outline-none focus:border-blue-500"
                     />
                   </div>
 
@@ -372,10 +360,10 @@ export const CreateNegotiationPage = () => {
                     <button
                       type="button"
                       onClick={() => handleRemoveDepartment(index)}
-                      className="p-1.5 text-slate-500 hover:text-red-400 transition-colors"
-                      title="Delete Department"
+                      className="p-1 text-slate-500 hover:text-red-400 transition-colors"
+                      title="Remove Department"
                     >
-                      <Trash2 className="w-4 h-4" />
+                      <Trash2 className="w-3.5 h-3.5" />
                     </button>
                   )}
                 </div>
@@ -391,13 +379,13 @@ export const CreateNegotiationPage = () => {
                       min={0}
                       value={dept.requestedBudget}
                       onChange={(e) => handleDeptChange(index, 'requestedBudget', Number(e.target.value))}
-                      className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs font-mono font-bold text-slate-100 focus:outline-none focus:border-brand-500"
+                      className="w-full bg-[#0b0f17] border border-[#1f293d] rounded-md px-2.5 py-1.5 text-xs font-mono font-medium text-slate-100 focus:outline-none focus:border-blue-500"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-medium text-amber-400 mb-1 flex items-center gap-1">
-                      <Lock className="w-3 h-3" /> Min Acceptable Budget (₹)
+                    <label className="block text-[11px] font-medium text-slate-400 mb-1">
+                      Minimum Acceptable Floor (₹)
                     </label>
                     <input
                       type="number"
@@ -406,18 +394,18 @@ export const CreateNegotiationPage = () => {
                       max={dept.requestedBudget}
                       value={dept.minAcceptableBudget}
                       onChange={(e) => handleDeptChange(index, 'minAcceptableBudget', Number(e.target.value))}
-                      className="w-full bg-slate-950 border border-amber-900/60 rounded-lg px-3 py-2 text-xs font-mono font-bold text-amber-300 focus:outline-none focus:border-amber-400"
+                      className="w-full bg-[#0b0f17] border border-amber-900/40 rounded-md px-2.5 py-1.5 text-xs font-mono font-medium text-amber-300 focus:outline-none focus:border-amber-400"
                     />
                   </div>
 
                   <div>
                     <label className="block text-[11px] font-medium text-slate-400 mb-1">
-                      Strategic Priority
+                      Priority
                     </label>
                     <select
                       value={dept.priority}
                       onChange={(e) => handleDeptChange(index, 'priority', e.target.value)}
-                      className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-brand-500"
+                      className="w-full bg-[#0b0f17] border border-[#1f293d] rounded-md px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-blue-500"
                     >
                       <option value="HIGH">HIGH (Weight: 1.3)</option>
                       <option value="MEDIUM">MEDIUM (Weight: 1.0)</option>
@@ -427,12 +415,12 @@ export const CreateNegotiationPage = () => {
 
                   <div>
                     <label className="block text-[11px] font-medium text-slate-400 mb-1">
-                      Negotiation Strategy
+                      Strategy
                     </label>
                     <select
                       value={dept.strategy}
                       onChange={(e) => handleDeptChange(index, 'strategy', e.target.value)}
-                      className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-brand-500"
+                      className="w-full bg-[#0b0f17] border border-[#1f293d] rounded-md px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-blue-500"
                     >
                       <option value="COMPROMISING">COMPROMISING (Balanced)</option>
                       <option value="COLLABORATIVE">COLLABORATIVE (High concessions)</option>
@@ -445,27 +433,27 @@ export const CreateNegotiationPage = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="block text-[11px] font-medium text-slate-400 mb-1">
-                      Hard Constraints (Comma-separated, mandatory)
+                      Hard Constraints (Mandatory items, comma-separated)
                     </label>
                     <input
                       type="text"
                       placeholder="e.g. Infrastructure maintenance, Compliance audits"
                       value={dept.hardConstraints}
                       onChange={(e) => handleDeptChange(index, 'hardConstraints', e.target.value)}
-                      className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-brand-500"
+                      className="w-full bg-[#0b0f17] border border-[#1f293d] rounded-md px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-blue-500"
                     />
                   </div>
 
                   <div>
                     <label className="block text-[11px] font-medium text-slate-400 mb-1">
-                      Soft Preferences (Comma-separated, negotiable)
+                      Soft Preferences (Negotiable items, comma-separated)
                     </label>
                     <input
                       type="text"
                       placeholder="e.g. Experimental sandbox, Roadshow travel"
                       value={dept.softPreferences}
                       onChange={(e) => handleDeptChange(index, 'softPreferences', e.target.value)}
-                      className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-brand-500"
+                      className="w-full bg-[#0b0f17] border border-[#1f293d] rounded-md px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-blue-500"
                     />
                   </div>
                 </div>
@@ -474,22 +462,22 @@ export const CreateNegotiationPage = () => {
           </div>
         </div>
 
-        {/* Submit */}
-        <div className="flex items-center justify-end space-x-4 pt-4 border-t border-slate-800">
+        {/* Action Controls */}
+        <div className="flex items-center justify-end space-x-3 pt-3 border-t border-[#1f293d]">
           <button
             type="button"
             onClick={() => navigate('/')}
-            className="px-5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-slate-200 transition-colors"
+            className="px-4 py-2 rounded-md text-xs font-medium text-slate-400 hover:text-slate-200 transition-colors"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={submitting || !feasibility.isFeasible}
-            className="flex items-center space-x-2 bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white font-semibold px-6 py-2.5 rounded-xl shadow-lg shadow-brand-500/20 text-sm transition-all transform active:scale-95 disabled:opacity-50"
+            className="inline-flex items-center space-x-1.5 bg-blue-600 hover:bg-blue-500 text-white font-medium px-5 py-2 rounded-md text-xs transition-colors disabled:opacity-50"
           >
-            <span>{submitting ? 'Initializing...' : 'Create & Enter Negotiation Room'}</span>
-            <ArrowRight className="w-4 h-4" />
+            <span>{submitting ? 'Creating...' : 'Create Negotiation'}</span>
+            <ArrowRight className="w-3.5 h-3.5" />
           </button>
         </div>
       </form>
@@ -498,3 +486,4 @@ export const CreateNegotiationPage = () => {
 };
 
 export default CreateNegotiationPage;
+

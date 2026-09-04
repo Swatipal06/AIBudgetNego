@@ -3,15 +3,14 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { getSocket } from '../services/socket';
 import {
-  Scale,
-  LayoutDashboard,
-  PlusCircle,
+  Plus,
   LogOut,
-  ShieldCheck,
-  Eye,
+  Shield,
+  User,
   Radio,
   Sparkles,
 } from 'lucide-react';
+import { BudgetSymbol } from './BudgetLogo';
 import api from '../services/api';
 
 export const Navbar = () => {
@@ -41,10 +40,9 @@ export const Navbar = () => {
   const handleSeedDemo = async () => {
     try {
       setSeeding(true);
-      // Create seed demo scenario via API
       await api.post('/negotiations', {
         title: `FY2026 Q3 Operating Budget Allocation (${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })})`,
-        description: 'Multi-department budget negotiation under strict 10L company cap.',
+        description: 'Multi-department budget negotiation under strict 10L corporate cap.',
         companyBudget: 1000000,
         maxRounds: 5,
         departments: [
@@ -92,113 +90,100 @@ export const Navbar = () => {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <nav className="border-b border-slate-800 bg-slate-900/90 backdrop-blur-md sticky top-0 z-50">
+    <nav className="border-b border-[#1f293d] bg-[#0d131f] sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo & Title */}
-          <div className="flex items-center space-x-3">
-            <Link to="/" className="flex items-center space-x-3 group">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-brand-500/20 group-hover:scale-105 transition-transform">
-                <Scale className="w-5 h-5 text-white" />
+        <div className="flex items-center justify-between h-14">
+          {/* Logo & Navigation */}
+          <div className="flex items-center space-x-8">
+            <Link to="/" className="flex items-center space-x-2.5">
+              <div className="w-7 h-7 rounded-md bg-blue-600 flex items-center justify-center">
+                <BudgetSymbol className="w-4 h-4 text-white" />
               </div>
-              <div>
-                <span className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-100 via-brand-200 to-indigo-300 font-heading">
-                  Negotiating Budget Agents
-                </span>
-                <span className="hidden sm:block text-[10px] uppercase tracking-widest text-slate-400 font-medium">
-                  Autonomous Multi-Agent AI System
-                </span>
-              </div>
-            </Link>
-          </div>
-
-          {/* Navigation Links */}
-          <div className="hidden md:flex items-center space-x-2">
-            <Link
-              to="/"
-              className={`flex items-center space-x-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                isActive('/')
-                  ? 'bg-slate-800 text-brand-400 shadow-sm'
-                  : 'text-slate-300 hover:bg-slate-800/60 hover:text-white'
-              }`}
-            >
-              <LayoutDashboard className="w-4 h-4" />
-              <span>Dashboard</span>
+              <span className="text-sm font-semibold text-white tracking-tight">
+                Budget Negotiations
+              </span>
             </Link>
 
-            {isAdmin && (
+            <div className="hidden md:flex items-center space-x-1">
               <Link
-                to="/create"
-                className={`flex items-center space-x-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  isActive('/create')
-                    ? 'bg-slate-800 text-brand-400 shadow-sm'
-                    : 'text-slate-300 hover:bg-slate-800/60 hover:text-white'
+                to="/"
+                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+                  isActive('/')
+                    ? 'bg-[#1a2436] text-white'
+                    : 'text-slate-400 hover:text-slate-200 hover:bg-[#141d2c]'
                 }`}
               >
-                <PlusCircle className="w-4 h-4" />
-                <span>New Negotiation</span>
+                Dashboard
               </Link>
-            )}
 
+              {isAdmin && (
+                <Link
+                  to="/create"
+                  className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+                    isActive('/create')
+                      ? 'bg-[#1a2436] text-white'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-[#141d2c]'
+                  }`}
+                >
+                  New Negotiation
+                </Link>
+              )}
+            </div>
+          </div>
+
+          {/* Right Action Tools & User Profile */}
+          <div className="flex items-center space-x-3">
+            {/* Subtle Seed Demo Button */}
             {isAdmin && (
               <button
                 onClick={handleSeedDemo}
                 disabled={seeding}
-                className="flex items-center space-x-1.5 px-3 py-2 rounded-lg text-sm font-medium text-amber-300 bg-amber-950/40 hover:bg-amber-900/60 border border-amber-800/50 transition-colors"
+                className="hidden sm:inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-md text-xs text-slate-300 hover:text-white bg-[#141c2c] hover:bg-[#1a2436] border border-[#243048] transition-colors"
                 title="Create a standard ₹10L company demo scenario with Engineering, Marketing & Sales"
               >
-                <Sparkles className="w-4 h-4 text-amber-400" />
-                <span>{seeding ? 'Seeding...' : 'Seed Demo Scenario'}</span>
+                <Sparkles className="w-3 h-3 text-slate-400" />
+                <span>{seeding ? 'Seeding...' : 'Seed Demo'}</span>
               </button>
             )}
-          </div>
 
-          {/* User Profile, Role Badge & Socket indicator */}
-          <div className="flex items-center space-x-3">
-            {/* Live Socket Status */}
+            {/* Socket connection indicator */}
             <div
-              className={`hidden sm:flex items-center space-x-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${
-                socketConnected
-                  ? 'bg-emerald-950/50 text-emerald-300 border-emerald-800/60'
-                  : 'bg-red-950/50 text-red-300 border-red-800/60'
-              }`}
-              title={socketConnected ? 'Real-time WebSocket Live' : 'Reconnecting...'}
+              className="flex items-center space-x-1.5 px-2 py-1 text-xs text-slate-400"
+              title={socketConnected ? 'Live Connection Active' : 'Connecting...'}
             >
-              <Radio className={`w-3 h-3 ${socketConnected ? 'animate-pulse text-emerald-400' : 'text-red-400'}`} />
-              <span>{socketConnected ? 'Live Real-Time' : 'Offline'}</span>
+              <span
+                className={`w-1.5 h-1.5 rounded-full ${
+                  socketConnected ? 'bg-emerald-400' : 'bg-amber-400'
+                }`}
+              />
+              <span className="hidden sm:inline text-[11px]">
+                {socketConnected ? 'Connected' : 'Offline'}
+              </span>
             </div>
 
-            {/* Role Badge */}
+            {/* User Profile */}
             {user && (
-              <div
-                className={`flex items-center space-x-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold uppercase tracking-wider border ${
-                  isAdmin
-                    ? 'bg-indigo-950/80 text-indigo-300 border-indigo-700/70 shadow-sm'
-                    : 'bg-slate-800 text-slate-300 border-slate-700'
-                }`}
-              >
-                {isAdmin ? (
-                  <ShieldCheck className="w-3.5 h-3.5 text-indigo-400" />
-                ) : (
-                  <Eye className="w-3.5 h-3.5 text-slate-400" />
-                )}
-                <span>{user.role}</span>
-              </div>
-            )}
-
-            {/* User Dropdown / Logout */}
-            {user && (
-              <div className="flex items-center space-x-2 pl-2 border-l border-slate-800">
-                <div className="hidden lg:block text-right">
-                  <div className="text-xs font-semibold text-slate-200">{user.name}</div>
-                  <div className="text-[10px] text-slate-400">{user.email}</div>
+              <div className="flex items-center space-x-3 pl-3 border-l border-[#1f293d]">
+                <div className="flex items-center space-x-2">
+                  <div className="w-6 h-6 rounded bg-[#1a2436] border border-[#243048] flex items-center justify-center text-xs font-medium text-slate-300">
+                    {user.name ? user.name[0].toUpperCase() : 'U'}
+                  </div>
+                  <div className="hidden lg:block text-left">
+                    <div className="text-xs font-medium text-slate-200 leading-none">
+                      {user.name}
+                    </div>
+                    <div className="text-[10px] text-slate-400 mt-0.5 leading-none">
+                      {user.role}
+                    </div>
+                  </div>
                 </div>
+
                 <button
                   onClick={logout}
-                  className="p-2 rounded-lg text-slate-400 hover:text-red-400 hover:bg-slate-800 transition-colors"
-                  title="Logout"
+                  className="p-1.5 rounded text-slate-400 hover:text-slate-200 hover:bg-[#1a2436] transition-colors"
+                  title="Sign out"
                 >
-                  <LogOut className="w-4 h-4" />
+                  <LogOut className="w-3.5 h-3.5" />
                 </button>
               </div>
             )}
@@ -210,3 +195,4 @@ export const Navbar = () => {
 };
 
 export default Navbar;
+

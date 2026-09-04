@@ -4,20 +4,20 @@
 
 @layer base {
   body {
-    @apply bg-slate-950 text-slate-100 antialiased;
+    @apply bg-[#0b0f17] text-slate-100 antialiased;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 
   /* Custom enterprise dark scrollbar */
   ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 5px;
+    height: 5px;
   }
   ::-webkit-scrollbar-track {
-    background: #090d16;
+    background: #0b0f17;
   }
   ::-webkit-scrollbar-thumb {
-    background: #1e293b;
+    background: #1f293d;
     border-radius: 4px;
   }
   ::-webkit-scrollbar-thumb:hover {
@@ -25,40 +25,44 @@
   }
 }
 
-/* Glassmorphic card utility */
+/* Enterprise surface panel */
+.enterprise-card {
+  background: #111827;
+  border: 1px solid #1f293d;
+  border-radius: 8px;
+}
+
+.enterprise-card-subtle {
+  background: #0d131f;
+  border: 1px solid #1a2333;
+  border-radius: 8px;
+}
+
+/* Backward compatibility mapping with refined enterprise look */
 .glass-panel {
-  background: rgba(15, 23, 42, 0.75);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(51, 65, 85, 0.6);
+  background: #111827;
+  border: 1px solid #1f293d;
+  border-radius: 8px;
 }
 
 .glass-panel-glow {
-  background: rgba(15, 23, 42, 0.85);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(99, 102, 241, 0.3);
-  box-shadow: 0 0 25px -5px rgba(99, 102, 241, 0.15);
+  background: #111827;
+  border: 1px solid #2563eb40;
+  border-radius: 8px;
 }
 
 .glass-panel-amber {
-  background: rgba(26, 18, 7, 0.85);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(245, 158, 11, 0.4);
-  box-shadow: 0 0 25px -5px rgba(245, 158, 11, 0.2);
+  background: #181510;
+  border: 1px solid #d9770640;
+  border-radius: 8px;
 }
 
 .glass-panel-emerald {
-  background: rgba(6, 28, 22, 0.85);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(16, 185, 129, 0.4);
-  box-shadow: 0 0 25px -5px rgba(16, 185, 129, 0.2);
-}
-
-@keyframes pulse-subtle {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.85; transform: scale(1.01); }
+  background: #0d1b15;
+  border: 1px solid #05966940;
+  border-radius: 8px;
 }
 
 .animate-pulse-subtle {
-  animation: pulse-subtle 3s ease-in-out infinite;
+  animation: none;
 }

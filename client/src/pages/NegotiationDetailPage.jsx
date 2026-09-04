@@ -15,18 +15,14 @@ import DepartmentCard from '../components/DepartmentCard';
 import TimelineEvent from '../components/TimelineEvent';
 import {
   Play,
-  StopCircle,
   FileText,
   Clock,
-  Sparkles,
-  Layers,
   Activity,
   BarChart3,
   PieChart as PieIcon,
   RefreshCw,
-  AlertTriangle,
-  CheckCircle2,
-  Lock,
+  X,
+  ChevronLeft,
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -199,27 +195,35 @@ export const NegotiationDetailPage = () => {
 
   if (loading && !negotiation) {
     return (
-      <div className="max-w-7xl mx-auto px-4 py-24 text-center text-slate-400">
-        Loading negotiation command center...
+      <div className="max-w-7xl mx-auto px-4 py-20 text-center text-slate-400 text-xs">
+        Loading negotiation details...
       </div>
     );
   }
 
   if (!negotiation) {
     return (
-      <div className="max-w-xl mx-auto py-24 text-center text-slate-400">
-        Negotiation not found. <Link to="/" className="text-brand-400 underline">Return to Dashboard</Link>
+      <div className="max-w-xl mx-auto py-20 text-center text-slate-400 text-xs">
+        Negotiation not found. <Link to="/" className="text-blue-400 underline ml-1">Return to Dashboard</Link>
       </div>
     );
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
-      {/* Header Bar */}
-      <div className="glass-panel p-6 sm:p-8 rounded-3xl border-slate-800 relative overflow-hidden">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-          <div className="space-y-2">
-            <div className="flex items-center gap-2.5 flex-wrap">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+      {/* Back link & Compact Room Header */}
+      <div className="space-y-3">
+        <Link
+          to="/"
+          className="inline-flex items-center space-x-1 text-xs text-slate-400 hover:text-slate-200 transition-colors"
+        >
+          <ChevronLeft className="w-3.5 h-3.5" />
+          <span>Back to Negotiations</span>
+        </Link>
+
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-[#1f293d]">
+          <div className="space-y-1.5">
+            <div className="flex items-center gap-2 flex-wrap">
               <StatusBadge status={negotiation.status} />
               <span className="text-xs text-slate-400 font-mono">
                 Round {negotiation.currentRound} of {negotiation.maxRounds}
@@ -230,49 +234,49 @@ export const NegotiationDetailPage = () => {
               </span>
             </div>
 
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight font-heading">
+            <h1 className="text-xl font-semibold text-white tracking-tight">
               {negotiation.title}
             </h1>
-            <p className="text-xs sm:text-sm text-slate-400 max-w-3xl">
-              {negotiation.description || 'Enterprise Multi-Agent Budget Negotiation Session'}
+            <p className="text-xs text-slate-400 max-w-3xl leading-relaxed">
+              {negotiation.description || 'Department budget negotiation session'}
             </p>
           </div>
 
           {/* Action Buttons */}
-          <div className="flex items-center gap-3 shrink-0 flex-wrap">
+          <div className="flex items-center gap-2 shrink-0 flex-wrap">
             <button
               onClick={() => setAuditModalOpen(true)}
-              className="flex items-center space-x-1.5 px-3.5 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-800 text-slate-200 text-xs font-semibold border border-slate-700 transition-colors shadow-sm"
+              className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-md bg-[#141c2c] hover:bg-[#1a2436] text-slate-300 hover:text-white text-xs font-medium border border-[#243048] transition-colors"
             >
-              <FileText className="w-4 h-4 text-indigo-400" />
-              <span>Audit Trail ({events.length})</span>
+              <FileText className="w-3.5 h-3.5" />
+              <span>Audit Log ({events.length})</span>
             </button>
 
             <button
               onClick={fetchFullNegotiation}
-              className="p-2 rounded-xl bg-slate-800/80 hover:bg-slate-800 text-slate-300 border border-slate-700 transition-colors"
+              className="p-1.5 rounded-md bg-[#141c2c] hover:bg-[#1a2436] text-slate-400 hover:text-white border border-[#243048] transition-colors"
               title="Refresh Room"
             >
-              <RefreshCw className="w-4 h-4" />
+              <RefreshCw className="w-3.5 h-3.5" />
             </button>
 
             {isAdmin && negotiation.status === 'PENDING' && (
               <button
                 onClick={handleStartNegotiation}
                 disabled={starting}
-                className="flex items-center space-x-2 bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white text-xs sm:text-sm font-semibold px-5 py-2 rounded-xl shadow-lg shadow-brand-500/20 transition-all transform active:scale-95 disabled:opacity-50"
+                className="inline-flex items-center space-x-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium px-4 py-1.5 rounded-md transition-colors disabled:opacity-50"
               >
-                <Play className="w-4 h-4 fill-white" />
-                <span>{starting ? 'Initializing Agents...' : 'Start Negotiation'}</span>
+                <Play className="w-3.5 h-3.5 fill-white" />
+                <span>{starting ? 'Starting...' : 'Start Negotiation'}</span>
               </button>
             )}
 
             {isAdmin && negotiation.status === 'RUNNING' && (
               <button
                 onClick={handleCancelNegotiation}
-                className="flex items-center space-x-1.5 bg-red-950/60 hover:bg-red-900/80 border border-red-800/60 text-red-300 text-xs font-semibold px-4 py-2 rounded-xl transition-colors"
+                className="inline-flex items-center space-x-1.5 bg-red-950/40 hover:bg-red-900/60 border border-red-800/50 text-red-300 text-xs font-medium px-3 py-1.5 rounded-md transition-colors"
               >
-                <StopCircle className="w-4 h-4" />
+                <X className="w-3.5 h-3.5" />
                 <span>Cancel</span>
               </button>
             )}
@@ -280,7 +284,7 @@ export const NegotiationDetailPage = () => {
         </div>
       </div>
 
-      {/* Human Approval Gate Banner (Appears on AWAITING_APPROVAL and FINALIZED) */}
+      {/* Human Approval Gate Banner */}
       <ApprovalGateBanner
         negotiation={negotiation}
         onActionComplete={fetchFullNegotiation}
@@ -292,19 +296,18 @@ export const NegotiationDetailPage = () => {
         totalAllocated={currentTotalAllocated}
       />
 
-      {/* Department Agent Cards Grid */}
-      <div>
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="text-base font-bold text-slate-100 flex items-center gap-2">
-            <Layers className="w-4 h-4 text-brand-400" />
-            <span>Participating Department Agents ({departments.length})</span>
+      {/* Department Cards Grid */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <h2 className="text-sm font-semibold text-slate-200">
+            Participating Departments ({departments.length})
           </h2>
           <span className="text-xs text-slate-400">
-            Autonomous decision-making with strict backend constraint clamping
+            Autonomous agent proposals clamped by minimum budget floor
           </span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           {departments.map((dept) => (
             <DepartmentCard
               key={dept._id}
@@ -315,58 +318,58 @@ export const NegotiationDetailPage = () => {
         </div>
       </div>
 
-      {/* Interactive Tabs: Timeline vs Charts vs Round History */}
-      <div className="glass-panel rounded-3xl border-slate-800 overflow-hidden shadow-2xl">
-        <div className="border-b border-slate-800 px-6 py-3 bg-slate-950/60 flex items-center justify-between">
-          <div className="flex items-center space-x-2">
+      {/* Tab Navigation: Timeline vs Charts vs Round History */}
+      <div className="bg-[#111827] border border-[#1f293d] rounded-lg overflow-hidden">
+        <div className="border-b border-[#1f293d] px-4 py-2 bg-[#0d131f] flex items-center justify-between">
+          <div className="flex items-center space-x-1">
             <button
               onClick={() => setActiveTab('timeline')}
-              className={`flex items-center space-x-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+              className={`flex items-center space-x-1.5 px-3 py-1 rounded-md text-xs font-medium transition-colors ${
                 activeTab === 'timeline'
-                  ? 'bg-slate-800 text-brand-400 shadow-sm border border-slate-700'
+                  ? 'bg-[#1a2436] text-white border border-[#243048]'
                   : 'text-slate-400 hover:text-slate-200'
               }`}
             >
               <Activity className="w-3.5 h-3.5" />
-              <span>Live Agent Stream ({events.length})</span>
+              <span>Activity Stream ({events.length})</span>
             </button>
 
             <button
               onClick={() => setActiveTab('charts')}
-              className={`flex items-center space-x-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+              className={`flex items-center space-x-1.5 px-3 py-1 rounded-md text-xs font-medium transition-colors ${
                 activeTab === 'charts'
-                  ? 'bg-slate-800 text-brand-400 shadow-sm border border-slate-700'
+                  ? 'bg-[#1a2436] text-white border border-[#243048]'
                   : 'text-slate-400 hover:text-slate-200'
               }`}
             >
               <BarChart3 className="w-3.5 h-3.5" />
-              <span>Analytics & Allocation Charts</span>
+              <span>Analytics & Breakdown</span>
             </button>
 
             <button
               onClick={() => setActiveTab('rounds')}
-              className={`flex items-center space-x-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+              className={`flex items-center space-x-1.5 px-3 py-1 rounded-md text-xs font-medium transition-colors ${
                 activeTab === 'rounds'
-                  ? 'bg-slate-800 text-brand-400 shadow-sm border border-slate-700'
+                  ? 'bg-[#1a2436] text-white border border-[#243048]'
                   : 'text-slate-400 hover:text-slate-200'
               }`}
             >
               <Clock className="w-3.5 h-3.5" />
-              <span>Round Matrix ({rounds.length})</span>
+              <span>Round History ({rounds.length})</span>
             </button>
           </div>
 
           <div className="text-[11px] text-slate-400 font-mono hidden sm:block">
-            Socket Stream Active
+            Real-time feed
           </div>
         </div>
 
         {/* Tab 1: Live Timeline Stream */}
         {activeTab === 'timeline' && (
-          <div className="p-6 space-y-3 max-h-[550px] overflow-y-auto">
+          <div className="p-4 space-y-2.5 max-h-[500px] overflow-y-auto">
             {events.length === 0 ? (
               <div className="text-center py-16 text-slate-500 text-xs">
-                Negotiation has not started yet. Click 'Start Negotiation' above to watch autonomous AI agents negotiate live.
+                Negotiation has not started yet. Click 'Start Negotiation' above to initiate agent rounds.
               </div>
             ) : (
               events.map((evt, idx) => <TimelineEvent key={evt._id || idx} event={evt} />)
@@ -377,14 +380,13 @@ export const NegotiationDetailPage = () => {
 
         {/* Tab 2: Visual Charts & Analytics */}
         {activeTab === 'charts' && (
-          <div className="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="p-5 grid grid-cols-1 lg:grid-cols-3 gap-5">
             {/* Bar Chart */}
-            <div className="lg:col-span-2 bg-slate-950/60 p-5 rounded-2xl border border-slate-800">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-300 mb-4 flex items-center gap-2">
-                <BarChart3 className="w-4 h-4 text-indigo-400" />
-                <span>Requested vs Min Acceptable vs Current Proposal</span>
+            <div className="lg:col-span-2 bg-[#0b0f17] p-4 rounded-md border border-[#1f293d]">
+              <h3 className="text-xs font-semibold text-slate-300 mb-4">
+                Requested vs Minimum Acceptable vs Current Proposal
               </h3>
-              <div className="h-64 w-full">
+              <div className="h-60 w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={barChartData}>
                     <XAxis dataKey="name" stroke="#64748b" fontSize={11} />
@@ -394,25 +396,24 @@ export const NegotiationDetailPage = () => {
                       tickFormatter={(val) => `₹${val / 1000}k`}
                     />
                     <Tooltip
-                      contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '12px' }}
+                      contentStyle={{ backgroundColor: '#111827', borderColor: '#1f293d', borderRadius: '6px', fontSize: '12px' }}
                       formatter={(val) => formatCurrency(val)}
                     />
-                    <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '10px' }} />
-                    <Bar dataKey="Requested" fill="#64748b" radius={[4, 4, 0, 0]} />
-                    <Bar dataKey="Min Acceptable" fill="#f59e0b" radius={[4, 4, 0, 0]} />
-                    <Bar dataKey="Current Proposal" fill="#14b8a6" radius={[4, 4, 0, 0]} />
+                    <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '8px' }} />
+                    <Bar dataKey="Requested" fill="#475569" radius={[2, 2, 0, 0]} />
+                    <Bar dataKey="Min Acceptable" fill="#d97706" radius={[2, 2, 0, 0]} />
+                    <Bar dataKey="Current Proposal" fill="#2563eb" radius={[2, 2, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
             </div>
 
             {/* Pie Chart */}
-            <div className="bg-slate-950/60 p-5 rounded-2xl border border-slate-800 flex flex-col justify-between">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-300 mb-2 flex items-center gap-2">
-                <PieIcon className="w-4 h-4 text-brand-400" />
-                <span>Department Share Distribution</span>
+            <div className="bg-[#0b0f17] p-4 rounded-md border border-[#1f293d] flex flex-col justify-between">
+              <h3 className="text-xs font-semibold text-slate-300 mb-2">
+                Department Share Distribution
               </h3>
-              <div className="h-52 w-full">
+              <div className="h-48 w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
@@ -421,26 +422,26 @@ export const NegotiationDetailPage = () => {
                       nameKey="name"
                       cx="50%"
                       cy="50%"
-                      outerRadius={70}
-                      innerRadius={40}
-                      paddingAngle={4}
+                      outerRadius={65}
+                      innerRadius={38}
+                      paddingAngle={3}
                     >
                       {pieChartData.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={entry.color} />
                       ))}
                     </Pie>
                     <Tooltip
-                      contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '12px' }}
+                      contentStyle={{ backgroundColor: '#111827', borderColor: '#1f293d', borderRadius: '6px', fontSize: '12px' }}
                       formatter={(val) => formatCurrency(val)}
                     />
                   </PieChart>
                 </ResponsiveContainer>
               </div>
-              <div className="space-y-1 mt-2">
+              <div className="space-y-1 mt-2 border-t border-[#1f293d] pt-2">
                 {pieChartData.map((entry, idx) => (
                   <div key={idx} className="flex items-center justify-between text-[11px]">
                     <div className="flex items-center space-x-1.5">
-                      <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: entry.color }} />
+                      <span className="w-2 h-2 rounded-full" style={{ backgroundColor: entry.color }} />
                       <span className="text-slate-300">{entry.name}</span>
                     </div>
                     <span className="font-mono text-slate-200">{formatCurrency(entry.value)}</span>
@@ -453,7 +454,7 @@ export const NegotiationDetailPage = () => {
 
         {/* Tab 3: Round-by-Round Matrix */}
         {activeTab === 'rounds' && (
-          <div className="p-6 space-y-4">
+          <div className="p-4 space-y-3">
             {rounds.length === 0 ? (
               <div className="text-center py-12 text-slate-500 text-xs">
                 No rounds completed yet.
@@ -462,27 +463,27 @@ export const NegotiationDetailPage = () => {
               rounds.map((rnd) => (
                 <div
                   key={rnd._id}
-                  className="bg-slate-950/70 border border-slate-800 rounded-2xl p-4 text-xs space-y-3"
+                  className="bg-[#0b0f17] border border-[#1f293d] rounded-md p-3.5 text-xs space-y-2.5"
                 >
-                  <div className="flex items-center justify-between border-b border-slate-800/80 pb-2.5">
+                  <div className="flex items-center justify-between border-b border-[#1f293d] pb-2">
                     <div className="flex items-center space-x-2">
-                      <span className="font-extrabold text-sm text-slate-100 font-mono">
+                      <span className="font-semibold text-slate-100 font-mono text-xs">
                         Round {rnd.roundNumber}
                       </span>
                       <span
-                        className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase border ${
+                        className={`px-1.5 py-0.5 rounded text-[10px] font-medium border ${
                           rnd.agreementReached
-                            ? 'bg-emerald-950 text-emerald-300 border-emerald-800'
+                            ? 'bg-emerald-950/40 text-emerald-300 border-emerald-800/50'
                             : rnd.deadlock
-                            ? 'bg-purple-950 text-purple-300 border-purple-800'
-                            : 'bg-amber-950 text-amber-300 border-amber-800'
+                            ? 'bg-amber-950/40 text-amber-300 border-amber-800/50'
+                            : 'bg-slate-800/80 text-slate-300 border-slate-700/60'
                         }`}
                       >
                         {rnd.agreementReached
-                          ? 'Agreement Reached'
+                          ? 'Agreement'
                           : rnd.deadlock
-                          ? 'Deadlock Reached'
-                          : 'Budget Conflict'}
+                          ? 'Deadlock'
+                          : 'In Progress'}
                       </span>
                     </div>
 
@@ -495,10 +496,10 @@ export const NegotiationDetailPage = () => {
                   {/* Proposal Rows */}
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                     {rnd.proposals.map((p, pIdx) => (
-                      <div key={pIdx} className="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
+                      <div key={pIdx} className="bg-[#111827] p-2.5 rounded border border-[#1f293d]">
                         <div className="flex items-center justify-between mb-1">
-                          <strong className="text-slate-200">{p.departmentName}</strong>
-                          <span className="font-mono text-brand-300 font-bold">{formatCurrency(p.proposedAmount)}</span>
+                          <strong className="text-slate-200 text-xs">{p.departmentName}</strong>
+                          <span className="font-mono text-slate-100 font-semibold">{formatCurrency(p.proposedAmount)}</span>
                         </div>
                         {p.reason && (
                           <p className="text-[11px] text-slate-400 line-clamp-2 italic">
@@ -508,7 +509,7 @@ export const NegotiationDetailPage = () => {
                         <div className="mt-1.5 flex items-center justify-between text-[10px] text-slate-500 font-mono">
                           <span>Utility: {p.utility}%</span>
                           {p.concessionAmount > 0 && (
-                            <span className="text-amber-400 font-sans">Concession: {formatCurrency(p.concessionAmount)}</span>
+                            <span className="text-amber-400">Concession: {formatCurrency(p.concessionAmount)}</span>
                           )}
                         </div>
                       </div>
@@ -532,3 +533,4 @@ export const NegotiationDetailPage = () => {
 };
 
 export default NegotiationDetailPage;
+

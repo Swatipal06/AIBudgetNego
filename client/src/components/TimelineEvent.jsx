@@ -1,67 +1,57 @@
 import React from 'react';
 import {
-  MessageSquare,
   TrendingDown,
-  Sparkles,
-  CheckCircle2,
-  AlertOctagon,
-  ShieldCheck,
-  Building,
+  CheckCircle,
+  AlertCircle,
+  MessageSquare,
 } from 'lucide-react';
 
 export const TimelineEvent = ({ event }) => {
   const formatCurrency = (val) => `₹${Number(val || 0).toLocaleString('en-IN')}`;
 
-  const getEventStyle = () => {
+  const getEventBadge = () => {
     switch (event.eventType) {
       case 'CONCESSION':
         return {
-          icon: <TrendingDown className="w-4 h-4 text-amber-400" />,
-          badge: 'bg-amber-950/80 text-amber-300 border-amber-800/60',
-          border: 'border-amber-500/40',
+          dot: 'bg-amber-400',
+          badge: 'bg-amber-950/40 text-amber-300 border-amber-800/50',
         };
       case 'AGREEMENT_REACHED':
       case 'ALLOCATION_APPROVED':
       case 'NEGOTIATION_FINALIZED':
         return {
-          icon: <CheckCircle2 className="w-4 h-4 text-emerald-400" />,
-          badge: 'bg-emerald-950/80 text-emerald-300 border-emerald-800/60',
-          border: 'border-emerald-500/40',
+          dot: 'bg-emerald-400',
+          badge: 'bg-emerald-950/40 text-emerald-300 border-emerald-800/50',
         };
       case 'DEADLOCK':
       case 'CFO_DECISION':
         return {
-          icon: <Sparkles className="w-4 h-4 text-purple-400" />,
-          badge: 'bg-purple-950/80 text-purple-300 border-purple-800/60',
-          border: 'border-purple-500/40',
+          dot: 'bg-amber-400',
+          badge: 'bg-amber-950/40 text-amber-300 border-amber-800/50',
         };
       case 'NEGOTIATION_FAILED':
       case 'ALLOCATION_REJECTED':
         return {
-          icon: <AlertOctagon className="w-4 h-4 text-red-400" />,
-          badge: 'bg-red-950/80 text-red-300 border-red-800/60',
-          border: 'border-red-500/40',
+          dot: 'bg-red-400',
+          badge: 'bg-red-950/40 text-red-300 border-red-800/50',
         };
       default:
         return {
-          icon: <MessageSquare className="w-4 h-4 text-indigo-400" />,
-          badge: 'bg-indigo-950/80 text-indigo-300 border-indigo-800/60',
-          border: 'border-slate-800',
+          dot: 'bg-blue-400',
+          badge: 'bg-slate-800/80 text-slate-300 border-slate-700/60',
         };
     }
   };
 
-  const style = getEventStyle();
+  const style = getEventBadge();
 
   return (
-    <div
-      className={`bg-slate-950/70 border ${style.border} rounded-xl p-3.5 transition-all shadow-sm`}
-    >
-      <div className="flex items-start justify-between gap-2 mb-1.5">
+    <div className="bg-[#0e1420] border border-[#1f293d] rounded-lg p-3 transition-colors hover:border-[#2a3752]">
+      <div className="flex items-center justify-between gap-2 mb-1.5">
         <div className="flex items-center space-x-2">
-          <div className="p-1 rounded-lg bg-slate-900">{style.icon}</div>
+          <span className={`w-1.5 h-1.5 rounded-full ${style.dot}`} />
           <span
-            className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider border ${style.badge}`}
+            className={`px-1.5 py-0.5 rounded text-[10px] font-medium border ${style.badge}`}
           >
             {event.eventType.replace(/_/g, ' ')}
           </span>
@@ -71,7 +61,7 @@ export const TimelineEvent = ({ event }) => {
             </span>
           )}
         </div>
-        <span className="text-[10px] font-mono text-slate-500">
+        <span className="text-[11px] font-mono text-slate-500">
           {new Date(event.timestamp).toLocaleTimeString()}
         </span>
       </div>
@@ -81,9 +71,9 @@ export const TimelineEvent = ({ event }) => {
       </p>
 
       {event.details?.proposedAmount && (
-        <div className="mt-2 flex items-center gap-3 text-[11px] font-mono text-slate-400 bg-slate-900/80 px-2.5 py-1.5 rounded-lg border border-slate-800">
+        <div className="mt-2 flex items-center gap-4 text-xs font-mono text-slate-400 bg-[#090d16] px-2.5 py-1.5 rounded border border-[#1f293d]">
           <span>
-            Offer: <strong className="text-brand-300">{formatCurrency(event.details.proposedAmount)}</strong>
+            Proposal: <strong className="text-slate-100">{formatCurrency(event.details.proposedAmount)}</strong>
           </span>
           {event.details.utility !== undefined && (
             <span>
@@ -97,3 +87,4 @@ export const TimelineEvent = ({ event }) => {
 };
 
 export default TimelineEvent;
+

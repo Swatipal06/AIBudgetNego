@@ -2,44 +2,52 @@ import React from 'react';
 
 const statusConfig = {
   PENDING: {
-    label: 'PENDING',
-    bg: 'bg-slate-800 text-slate-300 border-slate-700',
+    label: 'Pending',
     dot: 'bg-slate-400',
+    text: 'text-slate-300',
+    bg: 'bg-slate-800/60 border-slate-700/60',
   },
   RUNNING: {
-    label: 'RUNNING',
-    bg: 'bg-indigo-950/80 text-indigo-300 border-indigo-700/60',
-    dot: 'bg-indigo-400 animate-ping',
+    label: 'Running',
+    dot: 'bg-blue-400 animate-pulse',
+    text: 'text-blue-300',
+    bg: 'bg-blue-950/40 border-blue-800/50',
   },
   SETTLED: {
-    label: 'SETTLED (CONSENSUS)',
-    bg: 'bg-teal-950/80 text-teal-300 border-teal-700/60',
-    dot: 'bg-teal-400',
+    label: 'Settled (Consensus)',
+    dot: 'bg-emerald-400',
+    text: 'text-emerald-300',
+    bg: 'bg-emerald-950/40 border-emerald-800/50',
   },
   DEADLOCK: {
-    label: 'DEADLOCK (CFO ARBITRATED)',
-    bg: 'bg-purple-950/80 text-purple-300 border-purple-700/60',
-    dot: 'bg-purple-400',
+    label: 'Arbitrated',
+    dot: 'bg-amber-400',
+    text: 'text-amber-300',
+    bg: 'bg-amber-950/40 border-amber-800/50',
   },
   AWAITING_APPROVAL: {
-    label: 'AWAITING ADMIN APPROVAL',
-    bg: 'bg-amber-950/90 text-amber-300 border-amber-600/70 shadow-lg shadow-amber-950/50',
-    dot: 'bg-amber-400 animate-pulse',
+    label: 'Awaiting approval',
+    dot: 'bg-amber-400',
+    text: 'text-amber-300',
+    bg: 'bg-amber-950/40 border-amber-800/50',
   },
   FINALIZED: {
-    label: 'FINALIZED & BINDING',
-    bg: 'bg-emerald-950/90 text-emerald-300 border-emerald-600/70 shadow-lg shadow-emerald-950/50',
+    label: 'Approved',
     dot: 'bg-emerald-400',
+    text: 'text-emerald-300',
+    bg: 'bg-emerald-950/40 border-emerald-800/50',
   },
   CANCELLED: {
-    label: 'CANCELLED',
-    bg: 'bg-slate-900 text-slate-400 border-slate-800',
+    label: 'Cancelled',
     dot: 'bg-slate-500',
+    text: 'text-slate-400',
+    bg: 'bg-slate-900 border-slate-800',
   },
   FAILED: {
-    label: 'FAILED',
-    bg: 'bg-red-950/80 text-red-300 border-red-700/60',
+    label: 'Failed',
     dot: 'bg-red-400',
+    text: 'text-red-300',
+    bg: 'bg-red-950/40 border-red-800/50',
   },
 };
 
@@ -48,12 +56,13 @@ export const StatusBadge = ({ status, className = '' }) => {
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold tracking-wider uppercase border transition-all ${config.bg} ${className}`}
+      className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-xs font-medium border ${config.bg} ${config.text} ${className}`}
     >
-      <span className={`w-2 h-2 rounded-full ${config.dot}`} />
-      {config.label}
+      <span className={`w-1.5 h-1.5 rounded-full ${config.dot}`} />
+      <span>{config.label}</span>
     </span>
   );
 };
 
 export default StatusBadge;
+

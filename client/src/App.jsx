@@ -31,7 +31,7 @@ function AppRoutes() {
   const { isAuthenticated } = useAuth();
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans">
+    <div className="min-h-screen bg-[#0b0f17] text-slate-100 flex flex-col font-sans selection:bg-brand-600 selection:text-white">
       {isAuthenticated && <Navbar />}
       <main className="flex-1">
         <Routes>
@@ -69,14 +69,14 @@ function AppRoutes() {
         </Routes>
       </main>
 
-      {/* Persistent Enterprise Governance Footer */}
-      <footer className="border-t border-slate-900 bg-slate-950 py-6 px-4 text-center text-xs text-slate-500">
+      {/* Enterprise Governance Footer */}
+      <footer className="border-t border-[#1f293d] bg-[#0b0f17] py-5 px-4 text-xs text-slate-400">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
           <span>
-            Negotiating Budget Agents • Autonomous AI Multi-Agent Arbitration Platform
+            Budget Negotiations • Internal Allocation Platform
           </span>
           <span className="text-slate-400">
-            Governance Rule: <em>LLMs propose. The backend validates and coordinates. Humans confirm.</em>
+            Automated multi-agent rounds with mandatory administrative approval gate
           </span>
         </div>
       </footer>
