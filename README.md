@@ -7,6 +7,8 @@
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D20.0.0-indigo.svg)](https://nodejs.org)
 [![Docker](https://img.shields.io/badge/Docker-Supported-blue.svg)](https://www.docker.com/)
 
+🚀 **Live Demo**: [Budget Negotiations | Enterprise Allocation Platform](https://ai-budget-nego.vercel.app/)
+
 ---
 
 ## 1. Executive Summary & Problem Objective
@@ -264,3 +266,9 @@ The system strictly adheres to enterprise language guidelines:
 ## 10. License
 
 MIT License. Designed and engineered for production-grade enterprise multi-agent AI orchestration.
+
+---
+
+## Author
+
+**Swati Pal**
