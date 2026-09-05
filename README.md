@@ -7,8 +7,6 @@
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D20.0.0-indigo.svg)](https://nodejs.org)
 [![Docker](https://img.shields.io/badge/Docker-Supported-blue.svg)](https://www.docker.com/)
 
-🚀 **Live Demo**: [Budget Negotiations | Enterprise Allocation Platform](https://ai-budget-nego.vercel.app/)
-
 ---
 
 ## 1. Executive Summary & Problem Objective
